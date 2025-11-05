@@ -1,0 +1,427 @@
+:root {
+  --bg: #0f172a;
+  --surface: #111827;
+  --surface-2: #1f2937;
+  --text: #e5e7eb;
+  --muted: #9ca3af;
+  --primary: #22c55e;
+  --primary-600: #16a34a;
+  --menu-text: #0f1e3a; /* azul oscuro */
+  --danger: #ef4444;
+  --radius: 12px;
+  --shadow: 0 6px 24px rgba(0,0,0,.25);
+}
+
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; }
+body {
+  margin: 0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+  color: var(--text);
+  background: radial-gradient(1200px 600px at 100% -10%, #0b1024, transparent), var(--bg);
+}
+
+.container {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  backdrop-filter: saturate(140%) blur(8px);
+  background: linear-gradient(180deg, rgba(17,24,39,.9), rgba(17,24,39,.6));
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  font-weight: 700;
+  letter-spacing: .3px;
+}
+.brand-badge {
+  width: 36px;          /* antes: 28px */
+  height: 36px;         /* antes: 28px */
+  display: grid; place-items: center;
+  border-radius: 10px;  /* leve ajuste al radio para el nuevo tamaño */
+  color: #0b1410;
+  background: linear-gradient(135deg, var(--primary), #86efac);
+  font-size: 1.05rem;   /* antes: .9rem */
+  font-weight: 800;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  flex-wrap: wrap;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+/* Grupo interno sin fondo (por si existe) */
+.nav-group {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  gap: .6rem;
+}
+
+/* Cada enlace con su propio cuadro verde y texto azul oscuro */
+.nav-pill,
+.nav-pill:visited {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  padding: .5rem .8rem;
+  background: linear-gradient(135deg, var(--primary), #86efac);
+  border: 1px solid rgba(0,0,0,.18);
+  border-radius: 12px;
+  color: var(--menu-text) !important;
+  font-weight: 800;
+  text-decoration: none;
+  box-shadow: 0 6px 18px rgba(0,0,0,.25);
+}
+.nav-pill:hover {
+  filter: brightness(0.95);
+  border-color: rgba(0,0,0,.28);
+}
+.nav-pill:focus-visible {
+  outline: 2px solid var(--menu-text);
+  outline-offset: 2px;
+}
+
+.nav-links a, .nav-links button {
+  color: var(--text);
+  text-decoration: none;
+  padding: .55rem .9rem;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background: transparent;
+  transition: .15s ease;
+  font-weight: 600;
+}
+.nav-links a:hover {
+  background: rgba(255,255,255,.06);
+  border-color: rgba(255,255,255,.08);
+}
+.nav-links .btn {
+  background: var(--primary);
+  color: #0a0f0c;
+  border: 0;
+}
+.nav-links .btn:hover { background: var(--primary-600); }
+
+/* Contraste alto para enlaces de la navbar */
+.nav-links a,
+.nav-links a:visited {
+  color: #fff;           /* blanco puro para máxima legibilidad */
+  text-decoration: none; /* sin subrayado */
+}
+
+.nav-links a {
+  opacity: 0.96;         /* ligera atenuación normal */
+  font-weight: 700;      /* más peso para mayor lectura */
+}
+
+.nav-links a:hover {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.nav-links a:focus-visible,
+.nav-links button:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+.footer {
+  border-top: 1px solid rgba(255,255,255,.06);
+  margin-top: 2rem;
+  padding: 2rem 0;
+  color: var(--muted);
+  text-align: center;
+}
+
+.page {
+  padding: 1.2rem 0 2rem;
+  display: grid;
+  gap: 1.25rem;
+}
+
+.auth-wrapper {
+  display: grid;
+  place-items: center;
+  min-height: calc(100dvh - 140px);
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 1.25rem;
+  border-radius: var(--radius);
+  background: #ffffff;           /* fondo claro */
+  color: #000000;                /* texto negro */
+  border: 1px solid #e5e7eb;     /* borde claro */
+  box-shadow: var(--shadow);
+}
+.auth-card h2 {
+  margin: 0 0 .75rem;
+}
+.form {
+  display: grid;
+  gap: .8rem;
+}
+.input {
+  width: 100%;
+  padding: .75rem .9rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.03);
+  color: var(--text);
+  outline: none;
+}
+.input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(34,197,94,.2);
+}
+.error {
+  color: var(--danger);
+  font-size: .85rem;
+}
+.actions {
+  display: flex; align-items: center; gap: .6rem; justify-content: space-between;
+}
+.btn {
+  padding: .7rem 1rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.06);
+  color: var(--text);
+  font-weight: 700;
+  cursor: pointer;
+}
+.btn.primary { background: var(--primary); color: #071209; border: 0; }
+.btn.primary:hover { background: var(--primary-600); }
+.link-muted { color: var(--muted); text-decoration: none; }
+.link-muted:hover { color: var(--text); }
+
+/* Dejar la caja neutra (sin forzar amarillo/negro) */
+.page-box {
+  background: transparent;
+  color: inherit;
+  border: 0;
+  border-radius: var(--radius, 12px);
+  padding: 0;
+  box-shadow: none;
+}
+.page-box h1, .page-box h2, .page-box p {
+  color: inherit;
+  margin: 0 0 .5rem;
+}
+
+/* Enlaces amarillos para alta visibilidad */
+.nav-links .link-yellow,
+.nav-links .link-yellow:visited {
+  color: #facc15; /* amarillo */
+  font-weight: 700;
+}
+
+.nav-links .link-yellow:hover {
+  color: #fde047; /* amarillo más claro */
+  background: rgba(250, 204, 21, 0.12);
+  border-color: rgba(250, 204, 21, 0.24);
+}
+
+/* Estilos del cuadro negro para el grupo de enlaces */
+.nav-group {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  padding: .45rem .6rem;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+/* Inputs y textos dentro de auth-card en negro */
+.auth-card .input {
+  color: #111827;                /* gris muy oscuro (casi negro) */
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+}
+.auth-card .input::placeholder { color: #6b7280; } /* placeholder gris */
+.auth-card .error { color: #b91c1c; }              /* rojo oscuro en claro */
+
+/* Enlaces dentro de Login/Register con color oscuro para fondo claro */
+.auth-card .link-muted {
+  color: #374151;
+}
+.auth-card .link-muted:hover {
+  color: #111827;
+}
+
+/* Texto del menú en azul oscuro (links y botones) */
+.nav-links > a,
+.nav-links > a:visited,
+.nav-links > button {
+  color: var(--menu-text);
+  font-weight: 700;
+}
+
+/* Hover/focus accesible */
+.nav-links > a:hover,
+.nav-links > button:hover {
+  color: #0b1530; /* un poco más oscuro al hover */
+  background: rgba(255,255,255,.12);
+  border-color: rgba(255,255,255,.22);
+}
+.nav-links > a:focus-visible,
+.nav-links > button:focus-visible {
+  outline: 2px solid #0b1530;
+  outline-offset: 2px;
+}
+
+/* Si existían colores previos por clases, este bloque asegura prioridad */
+.nav-links .link-primary,
+.nav-links .link-yellow {
+  color: var(--menu-text) !important;
+}
+
+.products-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+}
+
+.product-card {
+  background: #0b0f17;
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: 12px;
+  box-shadow: 0 10px 24px rgba(0,0,0,.25);
+  overflow: hidden;
+  display: grid;
+}
+
+.product-img {
+  width: 100%;
+  aspect-ratio: 1/1;
+  object-fit: cover;
+  background: #000;
+}
+
+.product-body {
+  padding: .9rem;
+  display: grid;
+  gap: .5rem;
+}
+
+.product-title {
+  margin: 0;
+  font-size: 1rem;
+  color: #fff; /* Forzar color blanco */
+}
+
+.product-price {
+  margin: 0;
+  font-weight: 800;
+  color: #fff; /* antes usaba var(--primary) */
+}
+
+.product-desc {
+  color: #fff; /* Forzar color blanco para la descripción */
+}
+
+/* Si la descripción es un <p> genérico dentro del body de la tarjeta */
+.product-body p {
+  color: #fff; /* Forzar color blanco */
+}
+
+/* Estilo para el contador (badge) del carrito */
+.cart-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  margin-left: 6px;
+  border-radius: 999px;
+  font-size: .8rem;
+  font-weight: 800;
+  background: #0f1e3a; /* azul oscuro para contraste */
+  color: #fff;
+  border: 1px solid rgba(0,0,0,.25);
+}
+
+/* Estilos para los controles del carrito (líneas, botones +/-, quitar y precios) */
+.cart-lines {
+  display: grid;
+  gap: .6rem;
+  padding-left: 0;
+  list-style: none;
+}
+.cart-line {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: .6rem;
+  padding: .6rem .8rem;
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 10px;
+  background: #0b0f17;
+}
+.cart-line .line-name {
+  color: #fff !important;
+}
+.line-price {
+  color: var(--primary);
+  font-weight: 800;
+}
+.qty {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 999px;
+  padding: .2rem .4rem;
+}
+.qty-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.08);
+  color: #fff;
+  font-weight: 800;
+  cursor: pointer;
+}
+.qty-value {
+  min-width: 20px;
+  text-align: center;
+  color: #fff;
+}
+.remove-btn {
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(239, 68, 68, .12);
+  color: #fecaca;
+  border-radius: 10px;
+  padding: .35rem .6rem;
+  cursor: pointer;
+}

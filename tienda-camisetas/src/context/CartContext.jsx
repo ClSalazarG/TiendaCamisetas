@@ -1,60 +1,100 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
 
-const CartContext = createContext();
+const CartContext = createContext(null);
 
-export function useCart() { return useContext(CartContext); }
+function loadInitial() {
+  try {
+    const raw = localStorage.getItem("cart");
+    const parsed = raw ? JSON.parse(raw) : null;
+    if (parsed && Array.isArray(parsed.items)) {
+      // Normalizar posibles items antiguos sin size/quantity
+      const items = parsed.items.map((it) => ({
+        size: "M",
+        quantity: 1,
+        ...it,
+        quantity: typeof it.quantity === "number" ? it.quantity : 1,
+        size: it.size || "M",
+      }));
+      return { items };
+    }
+  } catch {}
+  return { items: [] };
+}
 
 export function CartProvider({ children }) {
-  const [items, setItems] = useState(() => {
-    try {
-      const raw = localStorage.getItem('cart_v1');
-      return raw ? JSON.parse(raw) : [];
-    } catch { return []; }
-  });
+  const [state, setState] = useState(loadInitial);
+
+  const addItem = (product, qty = 1, size = "M") => {
+    setState((prev) => {
+      const items = [...prev.items];
+      const idx = items.findIndex((it) => it.product.id === product.id && (it.size ?? "M") === size);
+      if (idx >= 0) {
+        items[idx] = { ...items[idx], quantity: (items[idx].quantity || 0) + qty };
+      } else {
+        items.push({ product, quantity: qty, size });
+      }
+      return { items };
+    });
+  };
+
+  // Elimina todas las tallas de un producto por id
+  const removeItem = (productId) => {
+    setState((prev) => ({ items: prev.items.filter((it) => it.product.id !== productId) }));
+  };
+
+  // Elimina solo la línea id+talla
+  const removeLine = (productId, size = "M") => {
+    setState((prev) => ({
+      items: prev.items.filter((it) => !(it.product.id === productId && (it.size ?? "M") === size)),
+    }));
+  };
+
+  const increment = (productId, size = "M") => {
+    setState((prev) => ({
+      items: prev.items.map((it) =>
+        it.product.id === productId && (it.size ?? "M") === size
+          ? { ...it, quantity: (it.quantity || 0) + 1 }
+          : it
+      ),
+    }));
+  };
+
+  const decrement = (productId, size = "M") => {
+    setState((prev) => {
+      const items = prev.items
+        .map((it) =>
+          it.product.id === productId && (it.size ?? "M") === size
+            ? { ...it, quantity: Math.max(0, (it.quantity || 0) - 1) }
+            : it
+        )
+        .filter((it) => (it.quantity || 0) > 0);
+      return { items };
+    });
+  };
+
+  const clear = () => setState({ items: [] });
+
+  const total = useMemo(
+    () => state.items.reduce((acc, it) => acc + (it.product.price || 0) * (it.quantity || 0), 0),
+    [state.items]
+  );
 
   useEffect(() => {
-    localStorage.setItem('cart_v1', JSON.stringify(items));
-  }, [items]);
+    try {
+      localStorage.setItem("cart", JSON.stringify(state));
+    } catch {}
+  }, [state]);
 
-  function addItem(product, qty = 1, size = null) {
-    setItems(prev => {
-      const idx = prev.findIndex(i => i.id === product.id && i.size === size);
-      if (idx >= 0) {
-        const updated = [...prev];
-        updated[idx].qty += qty;
-        return updated;
-      }
-      return [...prev, { id: product.id, name: product.name, price: product.price, qty, size, image: product.image }];
-    });
-  }
-
-  function removeItem(index) {
-    setItems(prev => prev.filter((_, i) => i !== index));
-  }
-
-  function clear() { setItems([]); }
-
-  function updateItemQty(index, delta) {
-    setItems(prev => {
-      const updated = [...prev];
-      if (index < 0 || index >= updated.length) return prev;
-      const newQty = (updated[index].qty || 0) + delta;
-      if (newQty <= 0) {
-        updated.splice(index, 1);
-      } else {
-        updated[index] = { ...updated[index], qty: newQty };
-      }
-      return updated;
-    });
-  }
-
-  function total() {
-    return items.reduce((s, it) => s + it.price * it.qty, 0);
-  }
-
-  return (
-    <CartContext.Provider value={{ items, addItem, removeItem, clear, updateItemQty, total }}>
-      {children}
-    </CartContext.Provider>
+  const value = useMemo(
+    () => ({ state, addItem, removeItem, removeLine, increment, decrement, clear, total }),
+    [state, total]
   );
+
+  return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
+}
+
+export function useCart() {
+  const ctx = useContext(CartContext);
+  if (!ctx) throw new Error("useCart debe usarse dentro de CartProvider");
+  return ctx;
 }

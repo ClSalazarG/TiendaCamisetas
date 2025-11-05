@@ -1,0 +1,13 @@
+/* Ajustes específicos de la pantalla de Login.
+   Nota: La mayor parte del estilo global está en App.css */
+.auth-card h2 {
+  letter-spacing: 0.2px;
+}
+
+.auth-card .actions {
+  margin-top: 0.25rem;
+}
+
+.auth-card .link-muted {
+  font-size: 0.9rem;
+}
