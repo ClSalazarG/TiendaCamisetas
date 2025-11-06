@@ -1,16 +1,23 @@
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, type SubmitHandler } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+
+type RegisterValues = {
+  name: string;
+  email: string;
+  password: string;
+  confirm: string;
+};
 
 export default function Register() {
   const { register: doRegister } = useAuth();
   const navigate = useNavigate();
-  const [serverError, setServerError] = useState(null);
-  const { register, handleSubmit, watch, formState: { errors, isSubmitting } } = useForm();
+  const [serverError, setServerError] = useState<string | null>(null);
+  const { register, handleSubmit, watch, formState: { errors, isSubmitting } } = useForm<RegisterValues>();
   const pwd = watch("password");
 
-  const onSubmit = async ({ name, email, password, confirm }) => {
+  const onSubmit: SubmitHandler<RegisterValues> = async ({ name, email, password, confirm }) => {
     setServerError(null);
     if (password !== confirm) {
       setServerError("Las contraseñas no coinciden");
@@ -20,7 +27,8 @@ export default function Register() {
       await doRegister(name, email, password);
       navigate("/", { replace: true });
     } catch (e) {
-      setServerError(e?.message || "No se pudo registrar");
+      const msg = e instanceof Error ? e.message : "No se pudo registrar";
+      setServerError(msg);
     }
   };
 
